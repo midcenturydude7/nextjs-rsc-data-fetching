@@ -6,13 +6,20 @@ import {
 } from "@heroicons/react/20/solid";
 
 export default async function Users({ searchParams }: { searchParams: any }) {
-  const page = typeof searchParams.page === "string" ? +searchParams.page : 1;
-  const users = await prisma.user.findMany({
-    take: 6,
-    skip: (page - 1) * 6,
-  });
+  const perPage = 7;
+  const totalUsers = (await prisma.user.count()) + 1;
+  const totalPages = Math.ceil(totalUsers / perPage);
 
-  const totalUsers = await prisma.user.count();
+  const page =
+    typeof searchParams.page === "string" &&
+    +searchParams.page > 1 &&
+    +searchParams.page <= Math.ceil(totalPages)
+      ? +searchParams.page
+      : 1;
+  const users = await prisma.user.findMany({
+    take: perPage,
+    skip: (page - 1) * perPage,
+  });
 
   return (
     <div className="min-h-screen bg-gray-50 px-8 pt-12">
@@ -95,9 +102,13 @@ export default async function Users({ searchParams }: { searchParams: any }) {
       </div>
       <div className="mt-4 flex items-center justify-between">
         <p className="ml-5 text-sm text-gray-700">
-          Showing <span className="font-semibold">{`${page === 1 ? page : (page - 1) * 6 + 2}`}</span> to{" "}
-          <span className="font-semibold">{page * 6 + 1}</span> of{" "}
-          <span className="font-semibold">{totalUsers}</span> users
+          Showing{" "}
+          <span className="font-semibold">{`${page === 1 ? page : (page - 1) * perPage + 2}`}</span>{" "}
+          to{" "}
+          <span className="font-semibold">
+            {Math.min(page * perPage + 1, totalUsers)}
+          </span>{" "}
+          of <span className="font-semibold">{totalUsers}</span> users
         </p>
         <div className="space-x-2">
           <Link
@@ -107,8 +118,8 @@ export default async function Users({ searchParams }: { searchParams: any }) {
             Previous
           </Link>
           <Link
-            className="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50"
-            href={`/?page=${page + 1}`}
+            className={`${page >= totalPages ? "pointer-events-none opacity-50" : ""} inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50`}
+            href={page < totalPages ? `/?page=${page + 1}` : `/?page=${page}`}
           >
             Next
           </Link>
