@@ -91,8 +91,20 @@ export default async function Users({ searchParams }: { searchParams: any }) {
           </div>
         </div>
       </div>
-      <div className="text-black">
-        <Link href={`/?page=${page + 1}`}>Next</Link>
+      <div className="mt-4 flex justify-between">
+        <p>Showing 1 to 6 of 100 users</p>
+        <Link
+          className={`${page === 1 ? "pointer-events-none opacity-50" : ""} inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50`}
+          href={page > 2 ? `/?page=${page - 1}` : "/"}
+        >
+          Previous
+        </Link>
+        <Link
+          className="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50"
+          href={`/?page=${page + 1}`}
+        >
+          Next
+        </Link>
       </div>
     </div>
   );
