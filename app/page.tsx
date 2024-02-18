@@ -63,6 +63,9 @@ export default async function Users() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="py-3.5 pl-6 pr-3 text-left text-sm font-semibold text-gray-900">
+                      ID
+                    </th>
+                    <th className="py-3.5 pl-6 pr-3 text-left text-sm font-semibold text-gray-900">
                       Name
                     </th>
                     <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
@@ -75,7 +78,10 @@ export default async function Users() {
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {users.map((user) => (
-                    <tr key={user.email}>
+                    <tr key={user.id}>
+                      <td className="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-gray-900">
+                        {user.id}
+                      </td>
                       <td className="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-gray-900">
                         {user.name}
                       </td>
