@@ -12,6 +12,8 @@ export default async function Users({ searchParams }: { searchParams: any }) {
     skip: (page - 1) * 6,
   });
 
+  const totalUsers = await prisma.user.count();
+
   return (
     <div className="min-h-screen bg-gray-50 px-8 pt-12">
       <div className="flex items-center justify-between">
@@ -91,20 +93,26 @@ export default async function Users({ searchParams }: { searchParams: any }) {
           </div>
         </div>
       </div>
-      <div className="mt-4 flex justify-between">
-        <p>Showing 1 to 6 of 100 users</p>
-        <Link
-          className={`${page === 1 ? "pointer-events-none opacity-50" : ""} inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50`}
-          href={page > 2 ? `/?page=${page - 1}` : "/"}
-        >
-          Previous
-        </Link>
-        <Link
-          className="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50"
-          href={`/?page=${page + 1}`}
-        >
-          Next
-        </Link>
+      <div className="mt-4 flex items-center justify-between">
+        <p className="ml-5 text-sm text-gray-700">
+          Showing <span className="font-semibold">{`${page === 1 ? page : (page - 1) * 6 + 2}`}</span> to{" "}
+          <span className="font-semibold">{page * 6 + 1}</span> of{" "}
+          <span className="font-semibold">{totalUsers}</span> users
+        </p>
+        <div className="space-x-2">
+          <Link
+            className={`${page === 1 ? "pointer-events-none opacity-50" : ""} inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50`}
+            href={page > 2 ? `/?page=${page - 1}` : "/"}
+          >
+            Previous
+          </Link>
+          <Link
+            className="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50"
+            href={`/?page=${page + 1}`}
+          >
+            Next
+          </Link>
+        </div>
       </div>
     </div>
   );
