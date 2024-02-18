@@ -1,3 +1,4 @@
+import { prisma } from "@/lib/prisma";
 import {
   ChevronRightIcon,
   MagnifyingGlassIcon,
@@ -22,7 +23,9 @@ let users = [
   },
 ];
 
-export default function Users() {
+export default async function Users() {
+  const users = await prisma.user.findMany();
+
   return (
     <div className="min-h-screen bg-gray-50 px-8 pt-12">
       <div className="flex items-center justify-between">
