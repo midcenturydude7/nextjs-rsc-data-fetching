@@ -38,3 +38,6 @@ next-env.d.ts
 # prettier
 prettier.config.js
 .prettier*
+
+# vscode
+.vscode
