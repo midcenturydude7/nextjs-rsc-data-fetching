@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import {
-  ChevronRightIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/20/solid";
+import SearchInput from "./components/SearchInput";
+import { ChevronRightIcon } from "@heroicons/react/20/solid";
 
 export default async function Users({ searchParams }: { searchParams: any }) {
   const perPage = 7;
@@ -25,21 +23,7 @@ export default async function Users({ searchParams }: { searchParams: any }) {
     <div className="min-h-screen bg-gray-50 px-8 pt-12">
       <div className="flex items-center justify-between">
         <div className="w-80">
-          <div className="relative mt-1 rounded-md shadow-sm">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <MagnifyingGlassIcon
-                className="h-5 w-5 text-gray-400"
-                aria-hidden="true"
-              />
-            </div>
-            <input
-              type="text"
-              name="search"
-              id="search"
-              className="block w-full rounded-md border-gray-300 pl-10 text-sm focus:border-gray-400 focus:outline-none focus:ring-0"
-              placeholder="Search"
-            />
-          </div>
+          <SearchInput />
         </div>
         <div className="ml-16 mt-0 flex-none">
           <button
