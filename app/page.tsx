@@ -1,11 +1,14 @@
-import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+
 import SearchInput from "./components/SearchInput";
 import NextPage from "./components/NextPage";
 import PreviousPage from "./components/PreviousPage";
+
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 
 export default async function Users({ searchParams }: { searchParams: any }) {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+
   const search =
     typeof searchParams.search === "string" ? searchParams.search : undefined;
 
