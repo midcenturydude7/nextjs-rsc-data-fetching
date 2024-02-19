@@ -1,8 +1,11 @@
 "use client";
 import React from "react";
+import { useRouter } from "next/navigation";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 
-export default function SearchInput() {
+export default function SearchInput({ search }: { search?: string }) {
+  const router = useRouter();
+
   return (
     <div className="relative mt-1 rounded-md shadow-sm">
       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -15,8 +18,11 @@ export default function SearchInput() {
         type="text"
         name="search"
         id="search"
-        className="block w-full rounded-md border-gray-300 pl-10 text-sm focus:border-gray-400 focus:outline-none focus:ring-0"
+        className="block w-full rounded-md border-gray-300 pl-10 text-sm text-black focus:border-gray-400 focus:outline-none focus:ring-0"
         placeholder="Search"
+        onChange={(e) => {
+          router.push(`/?search=${e.target.value}`);
+        }}
       />
     </div>
   );

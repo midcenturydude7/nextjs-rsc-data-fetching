@@ -1,11 +1,22 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import SearchInput from "./components/SearchInput";
+import NextPage from "./components/NextPage";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 
 export default async function Users({ searchParams }: { searchParams: any }) {
+  const search =
+    typeof searchParams.search === "string" ? searchParams.search : undefined;
+
   const perPage = 7;
-  const totalUsers = (await prisma.user.count()) + 1;
+  const totalUsers =
+    (await prisma.user.count({
+      where: {
+        name: {
+          contains: search,
+        },
+      },
+    })) + 1;
   const totalPages = Math.ceil(totalUsers / perPage);
 
   const page =
@@ -14,16 +25,37 @@ export default async function Users({ searchParams }: { searchParams: any }) {
     +searchParams.page <= Math.ceil(totalPages)
       ? +searchParams.page
       : 1;
+
   const users = await prisma.user.findMany({
     take: perPage,
     skip: (page - 1) * perPage,
+    where: {
+      name: {
+        contains: search,
+      },
+    },
   });
+
+  const currentSearchParams = new URLSearchParams();
+  if (search) {
+    currentSearchParams.set("search", search);
+  }
+
+  if (page > 1) {
+    currentSearchParams.set("page", `${page + 1}`);
+  }
+
+  const previousPageSearchParams = new URLSearchParams();
+  if (search) {
+    previousPageSearchParams.set("search", search);
+  }
+  previousPageSearchParams.set("page", `${page - 1}`);
 
   return (
     <div className="min-h-screen bg-gray-50 px-8 pt-12">
       <div className="flex items-center justify-between">
         <div className="w-80">
-          <SearchInput />
+          <SearchInput search={search} />
         </div>
         <div className="ml-16 mt-0 flex-none">
           <button
@@ -97,16 +129,15 @@ export default async function Users({ searchParams }: { searchParams: any }) {
         <div className="space-x-2">
           <Link
             className={`${page === 1 ? "pointer-events-none opacity-50" : ""} inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50`}
-            href={page > 2 ? `/?page=${page - 1}` : "/"}
+            href={page > 2 ? `/?${previousPageSearchParams.toString()}` : "/"}
           >
             Previous
           </Link>
-          <Link
-            className={`${page >= totalPages ? "pointer-events-none opacity-50" : ""} inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50`}
-            href={page < totalPages ? `/?page=${page + 1}` : `/?page=${page}`}
-          >
-            Next
-          </Link>
+          <NextPage
+            page={page}
+            totalPages={totalPages}
+            currentSearchParams={currentSearchParams}
+          />
         </div>
       </div>
     </div>
