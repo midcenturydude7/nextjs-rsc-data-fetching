@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import SearchInput from "./components/SearchInput";
 import NextPage from "./components/NextPage";
+import PreviousPage from "./components/PreviousPage";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 
 export default async function Users({ searchParams }: { searchParams: any }) {
@@ -127,12 +128,7 @@ export default async function Users({ searchParams }: { searchParams: any }) {
           of <span className="font-semibold">{totalUsers}</span> users
         </p>
         <div className="space-x-2">
-          <Link
-            className={`${page === 1 ? "pointer-events-none opacity-50" : ""} inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50`}
-            href={page > 2 ? `/?${previousPageSearchParams.toString()}` : "/"}
-          >
-            Previous
-          </Link>
+          <PreviousPage page={page} currentSearchParams={currentSearchParams} />
           <NextPage
             page={page}
             totalPages={totalPages}
